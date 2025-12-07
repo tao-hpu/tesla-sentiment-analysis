@@ -28,7 +28,7 @@ nltk.download('wordnet')
 nltk.download('omw-1.4')
 
 # 1. 读数据 -----------------------------------------------------------------
-FILE = "Tesla.csv"
+FILE = "data/Tesla.csv"
 df = pd.read_csv(FILE, usecols=["language", "tweet"])
 df = df.dropna(subset=["language", "tweet"])
 texts = df[df["language"]=="en"]["tweet"].astype(str).tolist()
@@ -78,7 +78,8 @@ sentiments = [analyzer.polarity_scores(t)['compound'] for t in cleaned]
 df_clean = pd.DataFrame({'tweet': cleaned, 'sentiment': sentiments})
 
 # 6. 可视化 ------------------------------------------------------------------
-os.makedirs("figs", exist_ok=True)
+figs_path="figures"
+os.makedirs(figs_path, exist_ok=True)
 
 # 6.1 词云
 wc = WordCloud(width=800, height=400, background_color='white').generate(" ".join(cleaned))
@@ -87,7 +88,7 @@ plt.imshow(wc, interpolation='bilinear')
 plt.axis('off')
 plt.title("Tesla Tweets – Word Cloud")
 plt.tight_layout()
-plt.savefig("figs/wordcloud.png", dpi=300)
+plt.savefig(f"{figs_path}/wordcloud.png", dpi=300)
 plt.show()
 
 # 6.2 情感分布
@@ -97,7 +98,7 @@ plt.title("Sentiment Distribution (VADER compound)")
 plt.xlabel("compound score")
 plt.ylabel("count")
 plt.tight_layout()
-plt.savefig("figs/sentiment_dist.png", dpi=300)
+plt.savefig(f"{figs_path}/sentiment_dist.png", dpi=300)
 plt.show()
 
 # 6.3 主题-词热力图
@@ -113,7 +114,7 @@ for i in range(N_TOPICS):
                 fmt='', cmap='Blues', cbar=False, ax=axes[i])
     axes[i].set_title(f"Topic {i}")
 plt.tight_layout()
-plt.savefig("figs/topic_word_heatmap.png", dpi=300)
+plt.savefig(f"{figs_path}/topic_word_heatmap.png", dpi=300)
 plt.show()
 
 # 6.4 文档主题权重分布
@@ -122,7 +123,7 @@ doc_topic_df.boxplot(figsize=(8, 4))
 plt.title("Document–Topic Weight Distribution")
 plt.ylabel("weight")
 plt.tight_layout()
-plt.savefig("figs/topic_weight_box.png", dpi=300)
+plt.savefig(f"{figs_path}/topic_weight_box.png", dpi=300)
 plt.show()
 
 # 7. 统计输出 ---------------------------------------------------------------
